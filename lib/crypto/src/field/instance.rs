@@ -5,7 +5,7 @@
 use crate::{
     arithmetic::uint::{U256, U64},
     field::fp::{Fp256, Fp64, FpParams, LIMBS_256, LIMBS_64},
-    fp_from_num, from_num,
+    fp_from_num, from_hex, from_num,
 };
 
 pub type FpVesta = Fp256<VestaParam>;
@@ -48,4 +48,13 @@ pub struct PallasParam;
 impl FpParams<LIMBS_256> for PallasParam {
     const GENERATOR: Fp256<PallasParam> = fp_from_num!("5");
     const MODULUS: U256 = from_num!("28948022309329048855892746252171976963363056481941560715954676764349967630337");
+}
+
+pub type FpKimchi = Fp256<KimchiParam>;
+pub struct KimchiParam;
+impl FpParams<LIMBS_256> for KimchiParam {
+    const GENERATOR: Fp256<KimchiParam> = fp_from_num!("7");
+    const MODULUS: U256 = from_hex!(
+        "40000000000000000000000000000000224698FC094CF91B992D30ED00000001"
+    );
 }
