@@ -180,6 +180,7 @@ pub enum Error {
     InvalidOperator(ERC721InvalidOperator),
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl MethodError for Error {
     fn encode(self) -> alloc::vec::Vec<u8> {
         self.into()
@@ -517,8 +518,9 @@ impl Erc721 {
     /// not tracked by the core [`Erc721`] logic MUST be matched with the use
     /// of [`Self::_increase_balance`] to keep balances consistent with
     /// ownership. The invariant to preserve is that for any address `a` the
-    /// value returned by [`Self::balance_of(a)`] must be equal to the number of
-    /// tokens such that [`Self::_owner_of(token_id)`] is `a`.
+    /// value returned by [`Self::balance_of(a)`][Self::balance_of] must be
+    /// equal to the number of tokens such that
+    /// [`Self::_owner_of(token_id)`][Self::_owner_of] is `a`.
     ///
     /// # Arguments
     ///
@@ -606,10 +608,9 @@ impl Erc721 {
     /// Unsafe write access to the balances, used by extensions that "mint"
     /// tokens using an [`Self::owner_of`] override.
     ///
-    /// NOTE: the value is limited to type(uint128).max. This protects against
-    /// _balance overflow. It is unrealistic that a `U256` would ever
-    /// overflow from increments when these increments are bounded to `u128`
-    /// values.
+    /// NOTE: the value is limited to [`U128::MAX`]. This protects against
+    /// balance overflow. It is unrealistic that a [`U256`] would ever overflow
+    /// from increments when these increments are bounded to [`U128`] values.
     ///
     /// WARNING: Increasing an account's balance using this function tends to
     /// be paired with an override of the [`Self::_owner_of`] function to

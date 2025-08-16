@@ -93,6 +93,7 @@ pub enum Error {
     InvalidApprover(erc20::ERC20InvalidApprover),
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl From<erc20::Error> for Error {
     fn from(value: erc20::Error) -> Self {
         match value {
@@ -110,6 +111,7 @@ impl From<erc20::Error> for Error {
     }
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl MethodError for Error {
     fn encode(self) -> alloc::vec::Vec<u8> {
         self.into()
@@ -125,7 +127,7 @@ mod borrower {
     use stylus_sdk::prelude::sol_interface;
 
     sol_interface! {
-        /// Interface of the ERC-3156 FlashBorrower, as defined in [ERC-3156].
+        /// Interface of the ERC-3156 Flash Borrower, as defined in [ERC-3156].
         ///
         /// [ERC-3156]: https://eips.ethereum.org/EIPS/eip-3156
         interface IERC3156FlashBorrower {

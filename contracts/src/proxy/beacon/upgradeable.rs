@@ -44,12 +44,14 @@ pub enum Error {
     InvalidOwner(ownable::OwnableInvalidOwner),
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl MethodError for Error {
     fn encode(self) -> alloc::vec::Vec<u8> {
         self.into()
     }
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl From<ownable::Error> for Error {
     fn from(err: ownable::Error) -> Self {
         match err {
@@ -85,7 +87,7 @@ pub trait IUpgradeableBeacon: IBeacon + IOwnable {
     /// * The new implementation address is invalid (e.g., not a contract).
     /// * The upgrade operation failed for contract-specific reasons.
     ///
-    /// The error should be encoded as a `Vec<u8>`.
+    /// The error should be encoded as a [`Vec<u8>`].
     fn upgrade_to(
         &mut self,
         new_implementation: Address,

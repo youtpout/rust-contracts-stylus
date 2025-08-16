@@ -58,6 +58,7 @@ pub enum Error {
     InvalidOwner(OwnableInvalidOwner),
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl MethodError for Error {
     fn encode(self) -> alloc::vec::Vec<u8> {
         self.into()
@@ -199,8 +200,7 @@ impl Ownable {
         if new_owner.is_zero() {
             return Err(Error::InvalidOwner(OwnableInvalidOwner {
                 owner: Address::ZERO,
-            })
-            .into());
+            }));
         }
 
         self._transfer_ownership(new_owner);

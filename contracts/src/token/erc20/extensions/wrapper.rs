@@ -78,6 +78,7 @@ pub enum Error {
     InvalidUnderlying(ERC20InvalidUnderlying),
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl From<erc20::Error> for Error {
     fn from(value: erc20::Error) -> Self {
         match value {
@@ -95,6 +96,7 @@ impl From<erc20::Error> for Error {
     }
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl From<safe_erc20::Error> for Error {
     fn from(value: safe_erc20::Error) -> Self {
         match value {
@@ -108,6 +110,7 @@ impl From<safe_erc20::Error> for Error {
     }
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 impl MethodError for Error {
     fn encode(self) -> alloc::vec::Vec<u8> {
         self.into()
@@ -517,6 +520,7 @@ mod tests {
     }
 
     #[motsu::test]
+    #[ignore = "TODO: unignore once motsu fixes https://github.com/OpenZeppelin/stylus-test-helpers/issues/115."]
     fn deposit_for_reverts_when_invalid_asset(
         contract: Contract<Erc20WrapperTestExample>,
         alice: Address,
