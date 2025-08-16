@@ -36,6 +36,7 @@ pub mod keccak;
 pub mod merkle;
 pub mod pedersen;
 pub mod poseidon2;
+pub mod poseidon_mina;
 
 pub use keccak::KeccakBuilder;
 
