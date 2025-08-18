@@ -436,7 +436,7 @@ mod tests {
 
     #[test]
     fn smoke() {
-        let mut poseidon = PoseidonMina::<KimchiParams, _>::new();
+        let mut poseidon = PoseidonMina::<KimchiParams, FpKimchi>::new();
         let inputs = vec![fp_from_hex!("bd3f1c8f183ceedea15080edbe79d30bd7d613b86bf2ba12007091c60ae39337"),
         fp_from_hex!("65e4f04ab87706bab06d13c7eee0a7807d0b8ce268b4ece6aab1e0508ec9c42f")];
         let elems: Vec<Scalar> = inputs.into_iter().map(Scalar::from).collect();

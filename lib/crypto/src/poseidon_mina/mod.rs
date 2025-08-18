@@ -36,7 +36,7 @@ pub struct PoseidonMina<P: PoseidonMinaParams<F>, F: PrimeField> {
     phantom: core::marker::PhantomData<P>,
     rate: usize,
     state: Box<[F]>,
-    pub sponge_state: SpongeState,
+    sponge_state: SpongeState,
     params: ArithmeticSpongeParams<F>,
 }
 
@@ -64,48 +64,12 @@ impl<P: PoseidonMinaParams<F>, F: PrimeField> PoseidonMina<P, F> {
         }
     }
 
-    /// Size of poseidon sponge's state.
-    #[must_use]
-    pub const fn state_size() -> usize {
-        P::SPONGE_WIDTH
-    }
-
-    #[must_use]
-    pub const fn rate_size() -> usize {
-        P::SPONGE_RATE
-    }
-
-    /// Start index of partial rounds.
-    ///
-    /// This represents the point where the algorithm transitions from full
-    /// rounds to partial rounds in the Poseidon permutation.
-    #[must_use]
-    const fn partial_round_start() -> usize {
-        P::PERM_HALF_ROUNDS_FULL
-    }
-
-    /// End index of partial rounds (noninclusive).
-    ///
-    /// This represents the point where the algorithm transitions from partial
-    /// rounds back to full rounds in the Poseidon permutation.
-    #[must_use]
-    const fn partial_round_end() -> usize {
-        Self::partial_round_start() + P::PERM_ROUNDS_PARTIAL
-    }
-
-    /// Total number of rounds.
-    ///
-    /// This is the sum of full rounds and partial rounds in the Poseidon
-    /// permutation.
-    #[must_use]
-    const fn rounds() -> usize {
-        P::PERM_ROUNDS_FULL + P::PERM_ROUNDS_PARTIAL
-    }
-
+    #[inline]
     pub fn full_round<SC: PoseidonMinaParams<F>>(&mut self, r: usize) {
         full_round::<F, SC>(&self.params, &mut self.state, r);
     }
 
+    #[inline]
     pub fn poseidon_block_cipher<SC: PoseidonMinaParams<F>>(&mut self) {
         poseidon_block_cipher::<F, SC>(&self.params, &mut self.state);
     }
@@ -166,6 +130,7 @@ impl<P: PoseidonMinaParams<F>, F: PrimeField> PoseidonMina<P, F> {
     }
 }
 
+#[inline]
 fn apply_mds_matrix<F: PrimeField, SC: PoseidonMinaParams<F>>(
     params: &ArithmeticSpongeParams<F>,
     state: &Box<[F]>,
@@ -188,6 +153,7 @@ fn apply_mds_matrix<F: PrimeField, SC: PoseidonMinaParams<F>>(
     }
 }
 
+#[inline]
 /// Apply a full round of the permutation.
 /// A full round is composed of the following steps:
 /// - Apply the S-box to each element of the state.
@@ -209,6 +175,7 @@ pub fn full_round<F: PrimeField, SC: PoseidonMinaParams<F>>(
     }
 }
 
+#[inline]
 pub fn half_rounds<F: PrimeField, SC: PoseidonMinaParams<F>>(
     params: &ArithmeticSpongeParams<F>,
     state: &mut Box<[F]>,
@@ -258,6 +225,7 @@ pub fn half_rounds<F: PrimeField, SC: PoseidonMinaParams<F>>(
     }
 }
 
+#[inline]
 pub fn poseidon_block_cipher<F: PrimeField, SC: PoseidonMinaParams<F>>(
     params: &ArithmeticSpongeParams<F>,
     state: &mut Box<[F]>,
@@ -280,6 +248,7 @@ pub fn poseidon_block_cipher<F: PrimeField, SC: PoseidonMinaParams<F>>(
     }
 }
 
+#[inline]
 pub fn sbox<F: PrimeField, SC: PoseidonMinaParams<F>>(mut x: F) -> F {
     if SC::PERM_SBOX == 7 {
         // This is much faster than using the generic `pow`. Hard-code to get
