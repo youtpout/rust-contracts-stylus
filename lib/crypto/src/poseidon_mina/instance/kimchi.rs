@@ -428,8 +428,8 @@ fp_from_hex!("1812dbcd70c440610057bbfdd0cc4d31d1faf5786419b53841c4adc43f2b2352")
 mod tests {
     use crate::{
         field::instance::FpKimchi,
-        fp_from_hex,
-        poseidon_mina::{instance::kimchi::KimchiParams, *}, poseidon_mina,
+        fp_from_hex, poseidon_mina,
+        poseidon_mina::{instance::kimchi::KimchiParams, *},
     };
 
     type Scalar = FpKimchi;
@@ -439,15 +439,60 @@ mod tests {
         let mut poseidon = PoseidonMina::<KimchiParams, _>::new();
         let inputs = vec![fp_from_hex!("bd3f1c8f183ceedea15080edbe79d30bd7d613b86bf2ba12007091c60ae39337"),
         fp_from_hex!("65e4f04ab87706bab06d13c7eee0a7807d0b8ce268b4ece6aab1e0508ec9c42f")];
-        for val in inputs {
-            poseidon.absorb(&Scalar::from(val));
-        }
+        let elems: Vec<Scalar> = inputs.into_iter().map(Scalar::from).collect();
+        poseidon.absorb(&elems);
 
         let output = poseidon.squeeze();
         assert_eq!(
            output,
             fp_from_hex!(
-                "fe2436f2027620a11233318b55d0a117086f09674826d1b7ce08d48ad0736c33"
+                "20d3c477c411d4af01a08bb6fd8e90ced91026018579cdb475b9ff9de22a9d89"
+            )
+        );
+    }
+
+    #[test]
+    fn smoke_one() {
+        let mut poseidon = PoseidonMina::<KimchiParams, _>::new();
+        let inputs = vec![1];
+        let elems: Vec<Scalar> = inputs.into_iter().map(Scalar::from).collect();
+        poseidon.absorb(&elems);
+        let output = poseidon.squeeze();
+        assert_eq!(
+           output,
+            fp_from_hex!(
+                "10b41a5d3139ef0802e5faf6a7776aab079e44e99ec5b306ddddd88e15fe9e6d"
+            )
+        );
+    }
+
+    #[test]
+    fn smoke_another_one() {
+        let mut poseidon = PoseidonMina::<KimchiParams, _>::new();
+        let inputs = vec![fp_from_hex!("10b41a5d3139ef0802e5faf6a7776aab079e44e99ec5b306ddddd88e15fe9e6d")];
+        let elems: Vec<Scalar> = inputs.into_iter().map(Scalar::from).collect();
+        poseidon.absorb(&elems);
+        let output = poseidon.squeeze();
+        assert_eq!(
+           output,
+            fp_from_hex!(
+                "1c5204e7b47a451eb61deaa87f081cad94ba63748f85746faec225a9253dffbc"
+            )
+        );
+    }
+
+    #[test]
+    fn smoke_two() {
+        let mut poseidon = PoseidonMina::<KimchiParams, _>::new();
+        let inputs = vec![3412u32, 548748548u32];
+        let elems: Vec<Scalar> = inputs.into_iter().map(Scalar::from).collect();
+        poseidon.absorb(&elems);
+
+        let output = poseidon.squeeze();
+        assert_eq!(
+           output,
+            fp_from_hex!(
+                "359a61bed7b32007fc592fd2942bc14248022dfb2114716f460734a74226fe06"
             )
         );
     }
